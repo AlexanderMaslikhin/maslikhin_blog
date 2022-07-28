@@ -4,7 +4,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def hello():
-    return "<h1 style='color:blue'>Coming soon...</h1>"
+    return "<h1 style='color:blue'>Coming soon...</h1><i>Скоро тут что-то будет... Но это не точно</i>"
 
 
 if __name__ == "__main__":
