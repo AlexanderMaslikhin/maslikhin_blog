@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import Blueprint
 app = Flask(__name__)
-
+app.config['SERVER_NAME'] = 'maslikhin.ru'
 
 bp = Blueprint('subdomain', __name__, subdomain='dl')
 
