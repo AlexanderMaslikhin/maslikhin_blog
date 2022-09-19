@@ -15,6 +15,7 @@ app.route("/")
 def hello():
     return "<h1 style='color:blue'>Coming soon...</h1><i>Скоро тут что-то будет... Но это не точно</i>"
 
+app.register_blueprint(bp)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')
