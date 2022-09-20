@@ -9,7 +9,7 @@ bp = Blueprint('subdomain', __name__, subdomain='dl')
 
 @bp.route('/')
 def index():
-    return '<img src="./test_imgs/1.jpg"></img>'
+    return '<img src="static/test_imgs/1.jpg"></img>'
 
 
 @app.route("/")
