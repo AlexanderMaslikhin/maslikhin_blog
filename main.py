@@ -9,13 +9,15 @@ app.config['SERVER_NAME'] = 'maslikhin.ru'
 bp = Blueprint('subdomain', __name__, subdomain='dl')
 
 
-@bp.route('/')
-def index():
+@bp.route('/<f_name>')
+def index(f_name=None):
+    if not f_name:
+        f_name = '1.jpg'
     models = {'inception': torch.load('./simpsons_model.pkl'),
               'dense': torch.load('./dense.pt', map_location=torch.device('cpu'))}
-    labels = {m_name: simpsons.classify('./static/test_imgs/1.jpg', model)
+    labels = {m_name: simpsons.classify('./static/test_imgs/' + f_name, model)
               for m_name, model in models.items()}
-    file = url_for('static', filename='/test_imgs/1.jpg')
+    file = url_for('static', filename=f'/test_imgs/{f_name}')
     result = f'<img src="{file}"></img><br>'
     for m_name, label in labels.items():
         result += f'Model {m_name}: {label}<br>'
