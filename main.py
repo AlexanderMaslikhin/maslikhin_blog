@@ -1,4 +1,3 @@
-import torch
 from flask import Blueprint
 from flask import Flask, url_for
 from simpsons import models, classify
@@ -20,7 +19,6 @@ def index(f_name=None):
     for m_name, label in labels.items():
         result += f'Model {m_name}: {label}<br>'
     return result
-
 
 
 @app.route("/")
