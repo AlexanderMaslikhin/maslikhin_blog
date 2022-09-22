@@ -1,9 +1,8 @@
-import torch
-from torchvision import transforms, datasets, models
-from PIL import Image
-from matplotlib import colors, pyplot as plt
 from os import listdir
 from os.path import isfile, join
+import torch
+from torchvision import transforms
+from PIL import Image
 
 data_transforms = transforms.Compose([
     transforms.Resize([224, 224]),
@@ -60,22 +59,22 @@ def classify(img_file, model):
     image.load()
     inp_data = data_transforms(image).unsqueeze(0)
     model.eval()
-    out = model(inp_data)
-    return simpsons_class_names[torch.max(out.data, 1)[1].item()]
+    predict = model(inp_data)
+    return simpsons_class_names[torch.max(predict.data, 1)[1].item()]
     # plt.imshow(image)
     # plt.title(simpsons_class_names[torch.max(out.data, 1)[1].item()])
     # plt.grid(False)
 
 
 if __name__ == '__main__':
-    models = torch.load("./dense.pt", map_location=torch.device('cpu')), torch.load('./simpsons_model.pkl')
-    mypath = './test_imgs'
-    imgs = [join(mypath, f) for f in listdir(mypath) if isfile(join(mypath, f))]
+    models = torch.load("./dense.pt", map_location=torch.device('cpu')), \
+             torch.load('./simpsons_model.pkl')
+    MY_PATH = './static/test_imgs'
+    imgs = [join(MY_PATH, f) for f in listdir(MY_PATH) if isfile(join(MY_PATH, f))]
     for img in imgs:
         print(img)
         classes = classify(img, models[0]), classify(img, models[1])
         out = f'{classes[0]:>30} {classes[1]:>30}'
         if classes[0] != classes[1]:
-            out = out + f'-->DIFF'
+            out = out + '-->DIFF'
         print(out)
-
