@@ -21,6 +21,11 @@ def index(f_name=None):
     return result
 
 
+@bp.route('/')
+def void_index():
+    return index()
+
+
 @app.route("/")
 def hello():
     return "<h1 style='color:blue'>Coming soon...</h1><i>Скоро тут что-то будет... " \
