@@ -1,7 +1,7 @@
 import torch
 from flask import Blueprint
 from flask import Flask, url_for
-import simpsons
+from simpsons import models, classify
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'maslikhin.ru'
@@ -13,9 +13,7 @@ bp = Blueprint('subdomain', __name__, subdomain='dl')
 def index(f_name=None):
     if not f_name:
         f_name = '1.jpg'
-    models = {'inception': torch.load('./simpsons_model.pkl'),
-              'dense': torch.load('./dense.pt', map_location=torch.device('cpu'))}
-    labels = {m_name: simpsons.classify('./static/test_imgs/' + f_name, model)
+    labels = {m_name: classify('./static/test_imgs/' + f_name, model)
               for m_name, model in models.items()}
     file = url_for('static', filename=f'/test_imgs/{f_name}')
     result = f'<img src="{file}"></img><br>'

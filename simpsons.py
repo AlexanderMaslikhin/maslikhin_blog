@@ -4,6 +4,9 @@ import torch
 from torchvision import transforms
 from PIL import Image
 
+models = {'inception': torch.load('./simpsons_model.pkl'),
+          'dense': torch.load('./dense.pt', map_location=torch.device('cpu'))}
+
 data_transforms = transforms.Compose([
     transforms.Resize([224, 224]),
     transforms.ToTensor(),
