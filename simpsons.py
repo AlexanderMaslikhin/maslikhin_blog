@@ -64,7 +64,7 @@ def classify(img_file, model):
     model.eval()
     predict = model(inp_data)
     predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
-    predict_proba = round(torch.sigmoid(torch.max(predict.data, 1)[0]).item(), 2)
+    predict_proba = round(torch.sigmoid(torch.max(predict.data, 1)[0]).item(), 4)
     return predict_class, predict_proba
     # plt.imshow(image)
     # plt.title(simpsons_class_names[torch.max(out.data, 1)[1].item()])
