@@ -17,7 +17,7 @@ def index(f_name=None):
     file = url_for('static', filename=f'/test_imgs/{f_name}')
     result = f'<img src="{file}"></img><br>'
     for m_name, label in labels.items():
-        result += f'Model {m_name}: {label[0]} - {label[1]*100}%<br>'
+        result += f'Model {m_name}: {label[0]} - {label[1]}%<br>'
     return result
 
 
