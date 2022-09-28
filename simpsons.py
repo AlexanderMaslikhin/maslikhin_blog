@@ -58,14 +58,21 @@ simpsons_class_names = ['Abraham Grampa Simpson',
 
 
 def classify(img_file, model):
-    image = Image.open(img_file)
-    image.load()
-    inp_data = data_transforms(image).unsqueeze(0)
-    model.eval()
-    predict = model(inp_data)
-    predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
-    predict_proba = round(torch.sigmoid(torch.max(predict.data, 1)[0]).item()*100, 4)
-    return predict_class, predict_proba
+    im = Image.open(img_file)
+    try:
+        im.verify()
+        with Image.open(img_file) as image:
+            image.load()
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
+            inp_data = data_transforms(image).unsqueeze(0)
+            model.eval()
+            predict = model(inp_data)
+            predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
+            predict_proba = round(torch.sigmoid(torch.max(predict.data, 1)[0]).item()*100, 4)
+        return predict_class, predict_proba
+    except Exception as e:
+        return 'error', f'Unexpected {e=}, {type(e)=}'
     # plt.imshow(image)
     # plt.title(simpsons_class_names[torch.max(out.data, 1)[1].item()])
     # plt.grid(False)
@@ -76,10 +83,11 @@ if __name__ == '__main__':
              torch.load('./simpsons_model.pkl')
     MY_PATH = './static/test_imgs'
     imgs = [join(MY_PATH, f) for f in listdir(MY_PATH) if isfile(join(MY_PATH, f))]
-    for img in imgs:
-        print(img)
-        classes = classify(img, models[0]), classify(img, models[1])
-        out = f'{classes[0]:>30} {classes[1]:>30}'
-        if classes[0] != classes[1]:
-            out = out + '-->DIFF'
-        print(out)
+    classify('./static/test_imgs/homer.png', models[1])
+    # for img in imgs:
+    #     print(img)
+    #     classes = classify(img, models[0]), classify(img, models[1])
+    #     out = f'{classes[0]:>30} {classes[1]:>30}'
+    #     if classes[0] != classes[1]:
+    #         out = out + '-->DIFF'
+    #     print(out)
