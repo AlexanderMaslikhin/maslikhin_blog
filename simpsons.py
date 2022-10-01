@@ -67,9 +67,9 @@ def classify(img_file, model):
                 image = image.convert('RGB')
             inp_data = data_transforms(image).unsqueeze(0)
             model.eval()
-            predict = model(inp_data)
+            predict = torch.softmax(model(inp_data))
             predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
-            predict_proba = round(torch.sigmoid(torch.max(predict.data, 1)[0]).item()*100, 4)
+            predict_proba = round(torch.max(predict.data, 1)[0].item()*100, 4)
         return predict_class, predict_proba
     except Exception as e:
         return 'error', f'Unexpected {e=}, {type(e)=}'
