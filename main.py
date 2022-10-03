@@ -44,6 +44,9 @@ def simpsons():
             pass
         elif request.form.get('im_url'):
             pass
+        else:
+            return abort(500, f'Некорректный файл изображения, либо отсутствует переданный файл')
+
         try:
             result_img = simpsons_classification_pipeline(filename)
             img_io = BytesIO()
