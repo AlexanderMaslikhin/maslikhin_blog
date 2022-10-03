@@ -7,6 +7,7 @@ from PIL import Image
 from img_proc import create_image
 from simpsons import models, classify
 import traceback
+import base64
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'maslikhin.ru'
@@ -48,7 +49,8 @@ def simpsons():
             img_io = BytesIO()
             result_img.save(img_io, 'JPEG', quality=70)
             img_io.seek(0)
-            return send_file(img_io, mimetype='image/jpeg')
+            img_b64 = base64.b64encode(img_io.read())
+            return send_file(str(img_b64), mimetype='image/jpeg')
         except Exception as error:
             tb = traceback.format_exc()
             return abort(500, f'Ошибка при обработке файла {filename}. {tb}')
