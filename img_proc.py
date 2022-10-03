@@ -7,6 +7,8 @@ def create_image(text: list, img_file=None):
         with Image.open(img_file) as image:
             image.load()
             image.thumbnail(size)
+            if image.mode != 'RGB':
+                image = image.convert('RGB')
             back = Image.new(image.mode, (image.width, image.height + 40), (255, 255, 255))
             draw_text = ImageDraw.Draw(back, back.mode)
             draw_text.text((10, 5), '\n'.join(text), fill='#555555')
