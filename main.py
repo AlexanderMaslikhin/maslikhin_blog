@@ -6,6 +6,7 @@ from io import BytesIO
 from PIL import Image
 from img_proc import create_image
 from simpsons import models, classify
+import traceback
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'maslikhin.ru'
@@ -37,7 +38,7 @@ def simpsons():
         if 'file' in request.files and request.files['file'].filename != '' and \
              request.files['file'] and allowed_file(request.files['file'].filename):
             file = request.files['file']
-            filename = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(file.filename))
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
             file.save(filename)
             pass
         elif request.form.get('im_url'):
@@ -49,7 +50,8 @@ def simpsons():
             img_io.seek(0)
             return send_file(img_io, mimetype='image/jpeg')
         except Exception as error:
-            return abort(500, f'Ошибка при обработке файла. {error=}')
+            tb = traceback.format_exc()
+            return abort(500, f'Ошибка при обработке файла. {tb}')
 
 
 def simpsons_classification_pipeline(f_name):
