@@ -15,10 +15,13 @@ def create_image(text: list, img_file=None):
     else:
         back = Image.new('RGB', (400, 200), (255, 255, 255))
         draw_text = ImageDraw.Draw(back, back.mode)
-        draw_text.text((150, 70), '\n'.join(text), fill='#FF0000')
+        draw_text.text((170, 90), '\n'.join(text), fill='#FF0000')
         return back
 
 
 if __name__ == '__main__':
-    im = create_image(["Test", 'mazafakka'])
+    from simpsons import models, classify
+    labels = [m_name + ': ' + classify('./static/test_imgs/gil.jpeg', model)
+              for m_name, model in models.items()]
+    im = create_image(labels, './static/test_imgs/gil.jpeg')
     im.show()

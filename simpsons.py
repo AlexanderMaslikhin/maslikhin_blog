@@ -26,7 +26,7 @@ simpsons_class_names = ['Abraham Grampa Simpson',
                         'Disco Stu',
                         'Edna Krabappel',
                         'Fat Tony',
-                        'Gil',
+                        'Gil Gunderson',
                         'Groundskeeper Willie',
                         'Homer Simpson',
                         'Kent Brockman',
@@ -58,32 +58,27 @@ simpsons_class_names = ['Abraham Grampa Simpson',
 
 
 def classify(img_file, model):
-    im = Image.open(img_file)
-    try:
-        im.verify()
-        with Image.open(img_file) as image:
-            image.load()
-            if image.mode != 'RGB':
-                image = image.convert('RGB')
-            inp_data = data_transforms(image).unsqueeze(0)
-            model.eval()
-            predict = torch.softmax(model(inp_data))
-            predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
-            predict_proba = round(torch.max(predict.data, 1)[0].item()*100, 4)
-        return predict_class, predict_proba
-    except Exception as e:
-        return 'error', f'Unexpected {e=}, {type(e)=}'
-    # plt.imshow(image)
-    # plt.title(simpsons_class_names[torch.max(out.data, 1)[1].item()])
-    # plt.grid(False)
+    with Image.open(img_file) as image:
+        image.load()
+        if image.mode != 'RGB':
+            image = image.convert('RGB')
+        inp_data = data_transforms(image).unsqueeze(0)
+        model.eval()
+        with torch.no_grad():
+            predict = model(inp_data)
+            predict = torch.nn.functional.softmax(predict, dim=1)
+        predict_class = simpsons_class_names[torch.max(predict.data, 1)[1].item()]
+        predict_proba = round(torch.max(predict.data, 1)[0].item()*100, 4)
+    return f'{predict_class} {predict_proba}%'
 
 
 if __name__ == '__main__':
-    models = torch.load("./dense.pt", map_location=torch.device('cpu')), \
-             torch.load('./simpsons_model.pkl')
-    MY_PATH = './static/test_imgs'
-    imgs = [join(MY_PATH, f) for f in listdir(MY_PATH) if isfile(join(MY_PATH, f))]
-    classify('./static/test_imgs/homer.png', models[1])
+    pass
+    # models = torch.load("./dense.pt", map_location=torch.device('cpu')), \
+    #          torch.load('./simpsons_model.pkl')
+    # MY_PATH = './static/test_imgs'
+    # imgs = [join(MY_PATH, f) for f in listdir(MY_PATH) if isfile(join(MY_PATH, f))]
+    # classify('./static/test_imgs/homer.png', models[1])
     # for img in imgs:
     #     print(img)
     #     classes = classify(img, models[0]), classify(img, models[1])

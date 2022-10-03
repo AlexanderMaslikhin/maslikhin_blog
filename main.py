@@ -1,33 +1,63 @@
 from flask import Blueprint
-from flask import Flask, url_for, send_from_directory
+from flask import Flask, url_for, send_from_directory, request, send_file, abort, render_template
+from werkzeug.utils import secure_filename
+import os
+from io import BytesIO
+from PIL import Image
+from img_proc import create_image
 from simpsons import models, classify
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'maslikhin.ru'
 
+UPLOAD_FOLDER = '/tmp/uploads/'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
 bp = Blueprint('subdomain', __name__, subdomain='dl')
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
 
 
-@bp.route('/simpsons', methods=['GET', 'POST'])
-def index():
-    return send_from_directory('static', 'simpsons.html')
-
-
-def simpsons_classification_pipline(f_name=None):
-    if not f_name:
-        f_name = '1.jpg'
-    labels = {m_name: classify('./static/test_imgs/' + f_name, model)
-              for m_name, model in models.items()}
-    file = url_for('static', filename=f'/test_imgs/{f_name}')
-    result = f'<img src="{file}"></img><br>'
-    for m_name, label in labels.items():
-        result += f'Model {m_name}: {label[0]} - {label[1]}%<br>'
-    return result
+def allowed_file(filename):
+    """ Функция проверки расширения файла """
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
 @bp.route('/')
-def void_index():
-    return index()
+def index():
+    return "<h3 align='center'>Раздел по глубокому обучению</h3>"
+
+
+@bp.route('/simpsons', methods=['GET', 'POST'])
+def simpsons():
+    filename = ''
+    if request.method == 'GET':
+        return render_template('simpsons.html')
+    else:
+        if 'file' in request.files and request.files['file'].filename != '' and \
+             request.files['file'] and allowed_file(request.files['file'].filename):
+            file = request.files['file']
+            filename = os.path.join(app.config['UPLOAD_FOLDER'],secure_filename(file.filename))
+            file.save(filename)
+            pass
+        elif request.form.get('im_url'):
+            pass
+        try:
+            result_img = simpsons_classification_pipeline(filename)
+            img_io = BytesIO()
+            result_img.save(img_io, 'JPEG', quality=70)
+            img_io.seek(0)
+            return send_file(img_io, mimetype='image/jpeg')
+        except Exception as error:
+            return abort(500, f'Ошибка при обработке файла. {error=}')
+
+
+def simpsons_classification_pipeline(f_name):
+    image = Image.open(f_name)
+    image.verify()
+    labels = [m_name + ': ' + classify(f_name, model) for m_name, model in models.items()]
+    result_img = create_image(labels, f_name)
+    return result_img
 
 
 @app.route("/")
