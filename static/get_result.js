@@ -9,7 +9,10 @@ $("#dataform").submit(function (event) {
                 img.attr('src', data);
                 img.appendTo('#result');
             },
-            error: (data) => alert(data),
+            error: function(data) {
+                let resp = $(data.responseText)
+                resp.appendTo('#result')
+            },
             cache: false,
             contentType: false,
             processData: false
