@@ -35,9 +35,9 @@ def simpsons():
     if request.method == 'GET':
         return render_template('simpsons.html')
     else:
-        if 'file' in request.files and request.files['file'].filename != '' and \
-             request.files['file'] and allowed_file(request.files['file'].filename):
-            file = request.files['file']
+        if 'image' in request.files and request.files['image'].filename != '' and \
+             request.files['image'] and allowed_file(request.files['image'].filename):
+            file = request.files['image']
             filename = os.path.join(app.config['UPLOAD_FOLDER'], secure_filename(file.filename))
             file.save(filename)
             pass
