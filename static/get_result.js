@@ -6,7 +6,7 @@ $("#dataform").submit(function (event) {
             data: new FormData(this),
             success: function (data) {
                 let img = $('<img id="result_img">');
-                img.attr('src', 'data:image/gif;base64,' + data);
+                img.attr('src', 'data:image/jpeg;base64,' + data);
                 img.appendTo('#result');
             },
             error: function(data) {
