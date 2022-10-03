@@ -51,7 +51,7 @@ def simpsons():
             return send_file(img_io, mimetype='image/jpeg')
         except Exception as error:
             tb = traceback.format_exc()
-            return abort(500, f'Ошибка при обработке файла. {tb}')
+            return abort(500, f'Ошибка при обработке файла {filename}. {tb}')
 
 
 def simpsons_classification_pipeline(f_name):
