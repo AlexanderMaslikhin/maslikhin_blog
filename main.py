@@ -1,5 +1,5 @@
 from flask import Blueprint
-from flask import Flask, url_for, send_from_directory, request, send_file, abort, render_template
+from flask import Flask, url_for, Response, request, send_file, abort, render_template
 from werkzeug.utils import secure_filename
 import os
 from io import BytesIO
@@ -50,7 +50,7 @@ def simpsons():
             result_img.save(img_io, 'JPEG', quality=70)
             img_io.seek(0)
             img_b64 = base64.b64encode(img_io.read())
-            return send_file(str(img_b64), mimetype='image/jpeg')
+            return Response(str(img_b64), mimetype='image/jpeg:base64')
         except Exception as error:
             tb = traceback.format_exc()
             return abort(500, f'Ошибка при обработке файла {filename}. {tb}')
