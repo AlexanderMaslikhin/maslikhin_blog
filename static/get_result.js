@@ -1,5 +1,6 @@
 $("#dataform").submit(function (event) {
     event.preventDefault();
+        $('#result').empty();
         $.ajax({
             url: window.location.pathname,
             type: 'POST',

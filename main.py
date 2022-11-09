@@ -55,8 +55,8 @@ def simpsons():
             img_b64 = base64.b64encode(img_io.read())
             return Response(str(img_b64), mimetype='image/jpeg:base64')
         except Exception as error:
-            tb = traceback.format_exc()
-            return abort(500, f'Ошибка при обработке файла {filename}. {tb}')
+            # tb = traceback.format_exc()
+            return abort(500, f'Ошибка при обработке файла {filename}. {error=}')
 
 
 def simpsons_classification_pipeline(f_name):
