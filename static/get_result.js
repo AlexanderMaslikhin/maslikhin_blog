@@ -1,3 +1,7 @@
+$("#imgfile").onchange(function() {
+    $("#dataform").submit();
+});
+
 $("#dataform").submit(function (event) {
     event.preventDefault();
         $('#result').empty();
