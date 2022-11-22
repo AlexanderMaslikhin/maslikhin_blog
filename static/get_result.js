@@ -1,4 +1,4 @@
-$("#imgfile").onchange(function() {
+$("#imgfile").change(function() {
     $("#dataform").submit();
 });
 
