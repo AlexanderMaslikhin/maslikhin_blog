@@ -9,7 +9,7 @@ def create_image(text: list, img_file=None):
             width, height = image.size
             h_ratio = height // width
             new_size = (new_width, h_ratio * new_width)
-            image.thumbnail(new_size)
+            image = image.resize(new_size)
             if image.mode != 'RGB':
                 image = image.convert('RGB')
             back = Image.new(image.mode, (image.width, image.height + 40), (255, 255, 255))
