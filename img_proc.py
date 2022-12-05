@@ -2,7 +2,7 @@ from PIL import Image, ImageDraw
 
 
 def create_image(text: list, img_file=None):
-    new_width = 400
+    new_width = 300
     if img_file:
         with Image.open(img_file) as image:
             image.load()
