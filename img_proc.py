@@ -7,8 +7,8 @@ def create_image(text: list, img_file=None):
         with Image.open(img_file) as image:
             image.load()
             width, height = image.size
-            h_ratio = height // width
-            new_size = (new_width, h_ratio * new_width)
+            h_ratio = height / width
+            new_size = (new_width, int(h_ratio * new_width))
             image = image.resize(new_size)
             if image.mode != 'RGB':
                 image = image.convert('RGB')
