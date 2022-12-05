@@ -2,13 +2,17 @@ from PIL import Image, ImageDraw
 
 
 def create_image(text: list, img_file=None):
-    new_width = 300
     if img_file:
         with Image.open(img_file) as image:
             image.load()
             width, height = image.size
             h_ratio = height / width
-            new_size = (new_width, int(h_ratio * new_width))
+            if height < width:
+                new_height = 400
+                new_size = (new_height / h_ratio, new_height)
+            else:
+                new_width = 300
+                new_size = (new_width, int(h_ratio * new_width))
             image = image.resize(new_size)
             if image.mode != 'RGB':
                 image = image.convert('RGB')
