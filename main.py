@@ -6,8 +6,10 @@ from io import BytesIO
 from PIL import Image
 from img_proc import create_image
 from simpsons import models, classify
-import traceback
 import base64
+import random
+import string
+import requests as http
 
 app = Flask(__name__)
 app.config['SERVER_NAME'] = 'maslikhin.ru'
@@ -17,6 +19,11 @@ app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 bp = Blueprint('subdomain', __name__, subdomain='dl')
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
+def generate_random_string(length):
+    letters = string.ascii_lowercase
+    return ''.join(random.choice(letters) for i in range(length))
 
 
 def allowed_file(filename):
@@ -43,10 +50,11 @@ def simpsons():
             file.save(filename)
             pass
         elif request.form.get('im_url'):
-            pass
+            response = http.get('im_url')
+            filename = os.path.join(app.config['UPLOAD_FOLDER'], generate_random_string(10) + ".img")
+            open(filename, 'wb').write(response.content)
         else:
             return abort(400, f'Некорректный файл изображения, либо отсутствует переданный файл')
-
         try:
             result_img = simpsons_classification_pipeline(filename)
             img_io = BytesIO()
