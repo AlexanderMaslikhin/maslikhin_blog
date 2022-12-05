@@ -50,7 +50,7 @@ def simpsons():
             file.save(filename)
             pass
         elif request.form.get('im_url'):
-            response = http.get('im_url')
+            response = http.get(request.form.get('im_url'))
             filename = os.path.join(app.config['UPLOAD_FOLDER'], generate_random_string(10) + ".img")
             open(filename, 'wb').write(response.content)
         else:
