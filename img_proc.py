@@ -9,7 +9,7 @@ def create_image(text: list, img_file=None):
             h_ratio = height / width
             if height < width:
                 new_height = 400
-                new_size = (new_height / h_ratio, new_height)
+                new_size = (int(new_height / h_ratio), new_height)
             else:
                 new_width = 300
                 new_size = (new_width, int(h_ratio * new_width))
